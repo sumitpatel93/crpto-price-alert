@@ -23,11 +23,11 @@ const CryptoDashboard = () => {
           'x-cg-demo-api-key': 'CG-kWh2m8p2ehpRbYM7o8gNPC7L'
         }
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to fetch crypto data');
       }
-      
+
       const data = await response.json();
       setCryptoData(data);
       setLoading(false);
@@ -70,11 +70,13 @@ const CryptoDashboard = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log('New Alert:', newAlert); // Check the new alert details
     setAlerts(prev => [...prev, { ...newAlert, id: Date.now() }]);
     setNewAlert({ cryptoId: '', type: 'above', price: '', email: '' });
     setAlertMessage('Alert created successfully!');
     setShowAlert(true);
   };
+
 
   if (loading) {
     return (
@@ -95,7 +97,7 @@ const CryptoDashboard = () => {
   return (
     <div className="container">
       <h1 className="title">Crypto Price Alert System</h1>
-      
+
       {showAlert && (
         <div className="alert-message">
           <p>{alertMessage}</p>
@@ -180,30 +182,37 @@ const CryptoDashboard = () => {
 
       {/* Active Alerts */}
       <div className="form-section">
-        <h2 className="section-title">Active Alerts ({alerts.length})</h2>
-        {alerts.length === 0 ? (
-          <p className="empty-message">No active alerts</p>
-        ) : (
-          <div className="alert-list">
-            {alerts.map(alert => {
-              const crypto = cryptoData.find(c => c.id === alert.cryptoId);
-              return (
-                <div key={alert.id} className="alert-item">
-                  <span>
-                    {crypto?.name} {alert.type} ${alert.price}
-                  </span>
-                  <button
-                    onClick={() => setAlerts(prev => prev.filter(a => a.id !== alert.id))}
-                    className="remove-button"
-                  >
-                    Remove
-                  </button>
-                </div>
-              );
-            })}
+  <h2 className="section-title">Active Alerts ({alerts.length})</h2>
+  {alerts.length === 0 ? (
+    <p className="empty-message">No active alerts</p>
+  ) : (
+    <div className="alert-list">
+      {alerts.map(alert => {
+        // Find the matching cryptocurrency for this alert
+        const crypto = cryptoData.find(c => c.id === alert.cryptoId);
+
+        return (
+          <div key={alert.id} className="alert-item">
+            <span>
+              {crypto
+                ? `${crypto.name} (${crypto.symbol.toUpperCase()}) - ${
+                    alert.type === 'above' ? 'Above' : 'Below'
+                  } $${alert.price}`
+                : 'Loading...'}
+            </span>
+            <button
+              onClick={() => setAlerts(prev => prev.filter(a => a.id !== alert.id))}
+              className="remove-button"
+            >
+              Remove
+            </button>
           </div>
-        )}
-      </div>
+        );
+      })}
+    </div>
+  )}
+</div>
+
     </div>
   );
 };
