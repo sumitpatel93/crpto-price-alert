@@ -1,0 +1,60 @@
+/* Add these new styles to your existing Dashboard.css */
+
+.loading-message {
+    text-align: center;
+    padding: 40px;
+    font-size: 1.2rem;
+    color: #666;
+  }
+  
+  .error-message {
+    text-align: center;
+    padding: 40px;
+    font-size: 1.2rem;
+    color: #f44336;
+  }
+  
+  .crypto-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .crypto-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+  }
+  
+  .crypto-details {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    font-size: 0.875rem;
+    color: #666;
+  }
+  
+  /* Update existing card styles */
+  .card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Update price change indicators */
+  .price-change-positive {
+    color: #4caf50;
+    font-weight: 500;
+  }
+  
+  .price-change-negative {
+    color: #f44336;
+    font-weight: 500;
+  }
