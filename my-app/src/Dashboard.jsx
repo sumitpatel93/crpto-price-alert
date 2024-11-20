@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Dashboard.css';
+import axios from "axios";
 
 const CryptoDashboard = () => {
   const [cryptoData, setCryptoData] = useState([]);
@@ -14,6 +15,9 @@ const CryptoDashboard = () => {
     price: '',
     email: ''
   });
+  const API_URL = "http://64.227.130.114:8000/api/send_email/";
+  const API_TOKEN =
+    "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY2NWRhYWJmMTZiMDE0NGM5NzRiZjI2YiIsImVtYWlsIjoidGVzdDFAZXhhbXBsZS5jb20iLCJleHAiOjE3MzE3NDExNTh9.gwSi0Y-bFC6Aw_17eL-MaYtna4OOVrkoubguOLITBeg";
 
   const fetchCryptoData = async () => {
     try {
@@ -34,6 +38,30 @@ const CryptoDashboard = () => {
     } catch (err) {
       setError(err.message);
       setLoading(false);
+    }
+  };
+
+  const sendEmail = async (alert, crypto) => {
+    try {
+      const emailData = {
+        sender: "blackbuck774@gmail.com",
+        recipient: alert.email,
+        subject: `Crypto Alert: ${crypto.name}`,
+        body: `Your alert for ${crypto.name} (${crypto.symbol.toUpperCase()}) has been triggered. Current price: $${crypto.current_price.toFixed(
+          2
+        )}.`,
+      };
+
+      await axios.post(API_URL, emailData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: API_TOKEN,
+        },
+      });
+
+      console.log(`Email sent to ${alert.email}`);
+    } catch (err) {
+      console.error("Failed to send email:", err);
     }
   };
 
@@ -61,6 +89,9 @@ const CryptoDashboard = () => {
           (alert.type === 'below' && crypto.current_price < alert.price)
         ) {
           setAlertMessage(`Alert: ${crypto.name} is ${alert.type} ${alert.price}!`);
+            // Send email
+          sendEmail(alert, crypto);
+
           setShowAlert(true);
           setAlerts(prev => prev.filter(a => a !== alert));
         }
